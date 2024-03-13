@@ -58,28 +58,60 @@ class BinaryTree {
         }
     }
     remove(data) {
-        let findNode = this.search(data);
-        if (findNode) {
-            if ((findNode === null || findNode === void 0 ? void 0 : findNode.left) === null && findNode.right === null) {
-                findNode = null;
-                return findNode;
-            }
-            else {
-                if ((findNode === null || findNode === void 0 ? void 0 : findNode.right) !== null) {
-                    let aux = findNode.left;
-                    findNode = findNode === null || findNode === void 0 ? void 0 : findNode.right;
-                    findNode.left = aux;
-                    //console.log('aaaaa', findNode);
-                    return findNode;
-                }
-                else if ((findNode === null || findNode === void 0 ? void 0 : findNode.left) !== null && findNode.right === null) {
-                    findNode = findNode.left;
-                    //console.log('bbbb', findNode);
-                    return findNode;
-                }
-            }
+        this.removeNode(this.root, data);
+        // let findNode = this.search(data);
+        // if(findNode) {
+        //   if(findNode?.left === null && findNode.right === null) { 
+        //     findNode = null;
+        //     return findNode;
+        //   } else {
+        //     if(findNode?.right !== null) {
+        //       let aux = findNode.left
+        //       findNode = findNode?.right;
+        //       findNode.left = aux;
+        //       //console.log('aaaaa', findNode);
+        //       return findNode;
+        //     } else if (findNode?.left !== null && findNode.right === null) {
+        //       findNode = findNode.left;
+        //       //console.log('bbbb', findNode);
+        //       return findNode;
+        //     } 
+        //   }
+        // }
+        // return null; 
+    }
+    removeNode(node, data) {
+        if (node === null) {
+            return null;
         }
-        return null;
+        if (data < node.data) {
+            node.left = this.removeNode(node.left, data);
+            return node;
+        }
+        else if (data > node.data) {
+            node.right = this.removeNode(node.right, data);
+            return node;
+        }
+        else {
+            if (node.left === null) {
+                return node.right;
+            }
+            else if (node.right === null) {
+                return node.left;
+            }
+            const minRightNode = this.findMinNode(node.right);
+            node.data = minRightNode.data;
+            node.right = this.removeNode(node.right, minRightNode.data);
+            return node;
+        }
+    }
+    findMinNode(node) {
+        if (node.left === null) {
+            return node;
+        }
+        else {
+            return this.findMinNode(node.left);
+        }
     }
 }
 const tree = new BinaryTree();
