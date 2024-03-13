@@ -9,6 +9,7 @@ class NodeTree {
 class BinaryTree {
     constructor() {
         this.root = null;
+        this.listPath = [];
     }
     insert(data) {
         const newNode = new NodeTree(data);
@@ -52,33 +53,13 @@ class BinaryTree {
         }
         if (data < node.data) {
             return this.searchNode(node.left, data);
+            ;
         }
-        else {
+        else
             return this.searchNode(node.right, data);
-        }
     }
     remove(data) {
         this.removeNode(this.root, data);
-        // let findNode = this.search(data);
-        // if(findNode) {
-        //   if(findNode?.left === null && findNode.right === null) { 
-        //     findNode = null;
-        //     return findNode;
-        //   } else {
-        //     if(findNode?.right !== null) {
-        //       let aux = findNode.left
-        //       findNode = findNode?.right;
-        //       findNode.left = aux;
-        //       //console.log('aaaaa', findNode);
-        //       return findNode;
-        //     } else if (findNode?.left !== null && findNode.right === null) {
-        //       findNode = findNode.left;
-        //       //console.log('bbbb', findNode);
-        //       return findNode;
-        //     } 
-        //   }
-        // }
-        // return null; 
     }
     removeNode(node, data) {
         if (node === null) {
@@ -113,6 +94,38 @@ class BinaryTree {
             return this.findMinNode(node.left);
         }
     }
+    inOrderTraversal(callback) {
+        this.inOrderTraversalNode(this.root, callback);
+    }
+    inOrderTraversalNode(node, callback) {
+        if (node !== null) {
+            this.inOrderTraversalNode(node.left, callback);
+            callback(node.data);
+            this.inOrderTraversalNode(node.right, callback);
+        }
+    }
+    treeHeight(node) {
+        if (node === null) {
+            return -1;
+        }
+        const leftHeight = this.treeHeight(node.left);
+        const rightHeight = this.treeHeight(node.right);
+        return +1 + Math.max(leftHeight, rightHeight);
+    }
+    pathToNode(node, data) {
+        if (node === null) {
+            console.log(this.listPath);
+            return null;
+        }
+        if (data < node.data) {
+            this.listPath.unshift(node.data);
+            return this.pathToNode(node.left, data);
+        }
+        else {
+            this.listPath.unshift(node.data);
+            return this.pathToNode(node.right, data);
+        }
+    }
 }
 const tree = new BinaryTree();
 tree.insert(8);
@@ -123,8 +136,20 @@ tree.insert(6);
 tree.insert(9);
 tree.insert(8);
 tree.insert(14);
+tree.insert(13);
 const searchNumber = tree.search(9);
-const removeNumber = tree.remove(10);
-// console.log(searchNumber);
-//console.log(removeNumber);
+//const removeNumber = tree.remove(10);
+console.log(searchNumber);
+console.log("----------------------------------------------------");
+const result = [];
+tree.inOrderTraversal((data) => {
+    result.push(data);
+});
+console.log(result);
+console.log("--------------------------");
+const height = tree.treeHeight(tree.root);
+console.log(height);
+console.log("--------------------------");
 const a = tree.traverseTree(tree.root);
+console.log("-------------------------");
+const pathNode = tree.pathToNode(tree.root, 9);
